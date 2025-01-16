@@ -5,10 +5,19 @@ description = "A pre-commit hook to keep mypy pre-commit hook's additional_depen
 authors = ["Martin Schulze <martin.schulze@e2m.de>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include="pre_commit_mypy_poetry_sync_hook/*.py"}]
+
+[tool.poetry.scripts]
+sync-mypy-additional-dependencies = "pre_commit_mypy_poetry_sync_hook.sync_mypy_additional_dependencies:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+ruamel-yaml = "^0.18.10"
+poetry-core = "^2.0.0"
 
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
