@@ -4,4 +4,4 @@
   entry: sync-mypy-additional-dependencies
   language: python
   language_version: python3
-  files: '^\.pre-commit-config.yaml$'
+  files: '^poetry.lock|\.pre-commit-config.yaml|pyproject.toml$'
