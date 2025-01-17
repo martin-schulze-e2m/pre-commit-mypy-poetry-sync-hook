@@ -1,0 +1,9 @@
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+repos:
+- hooks:
+  - id: mypy
+    stages: [pre-commit]
+    additional_dependencies:
+      - bla
+  repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.10.0

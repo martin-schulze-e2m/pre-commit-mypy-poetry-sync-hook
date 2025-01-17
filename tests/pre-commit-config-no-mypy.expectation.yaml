@@ -1,0 +1,7 @@
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+repos:
+- hooks:
+  - id: poetry-check
+    stages: [pre-commit]
+  repo: https://github.com/python-poetry/poetry
+  rev: 1.8.3
