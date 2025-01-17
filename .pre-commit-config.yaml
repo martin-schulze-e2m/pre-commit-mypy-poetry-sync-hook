@@ -1,0 +1,45 @@
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+repos:
+- hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+    stages: [pre-commit]
+  - id: check-added-large-files
+    stages: [pre-commit]
+  repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.2.0
+- hooks:
+  - id: ruff
+    args:
+    - --fix
+    stages: [pre-commit]
+  - id: ruff-format
+    stages: [pre-commit]
+
+  repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.4.8
+- hooks:
+  - id: mypy
+    stages: [pre-commit]
+    additional_dependencies:
+    - pre-commit (>=4.0.1,<5.0.0)
+    - ruamel-yaml (>=0.18.10,<0.19.0)
+    - poetry-core (>=2.0.0,<3.0.0)
+  repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.10.0
+- hooks:
+  - id: commitizen
+  - id: commitizen-branch
+    stages: [pre-push]
+  repo: https://github.com/commitizen-tools/commitizen
+  rev: v3.27.0
+- hooks:
+  - id: poetry-check
+    stages: [pre-commit]
+  repo: https://github.com/python-poetry/poetry
+  rev: 1.8.3
+- hooks:
+  - id: sync-mypy-additional-dependencies
+  repo: .
+  rev: main
