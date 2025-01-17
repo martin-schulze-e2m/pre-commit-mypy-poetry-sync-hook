@@ -19,7 +19,8 @@ def main():
         "--pyproject-path", type=Path, help="Path to the pyproject.toml"
     )
     parser.add_argument(
-        "--groups", nargs="*", help="List of groups to sync dependencies for"
+        "--groups",
+        help="Comma separated list of groups to sync dependencies for",
     )
     parser.add_argument("--yaml-map-indent", type=int, default=2)
     parser.add_argument("--yaml-sequence-indent", type=int, default=2)
@@ -34,7 +35,7 @@ def _sync(
     filenames: list[str] | None = None,
     pre_commit_config_yaml_path: Path | None = None,
     pyproject_path: Path | None = None,
-    groups: list[str] | None = None,
+    groups: str | None = None,
     yaml_map_indent: int = 2,
     yaml_sequence_indent: int = 2,
     yaml_sequence_dash_offset: int = 0,
@@ -56,11 +57,13 @@ def _sync(
     poetry = factory.create_poetry(cwd=pyproject_path)
     poetry_package = poetry.package
     if groups is None:
-        groups = sorted(poetry_package.dependency_group_names())
+        groups_list = sorted(poetry_package.dependency_group_names())
+    else:
+        groups_list = groups.split(",")
 
     dependencies = (
         dependency
-        for group in groups
+        for group in groups_list
         for dependency in poetry_package.dependency_group(group).dependencies
     )
 
