@@ -34,7 +34,7 @@ List of poetry groups to sync dependencies for
 
 **default**: all non-optional groups
 
-### `--extra_additional_dependencies <str>`
+### `--extra-additional-dependencies <str>`
 
 Strings that should be added as entries to mypy hook's `additional_dependencies` before the dependencies from poetry.
 Can be repeated to add multiple entries.

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from pre_commit_mypy_poetry_sync_hook.sync_mypy_additional_dependencies import _sync
+from pre_commit_mypy_poetry_sync_hook.sync_mypy_additional_dependencies import main
 
 project_root = Path(__file__).parent.parent
 
@@ -18,13 +18,18 @@ def readlines(path: Path) -> list[str]:
     [
         (
             "pre-commit-config-no-additional_dependencies.yaml",
-            {"extra_additional_dependencies": ["foo", "bar"]},
+            [
+                "--extra-additional-dependencies",
+                "foo",
+                "--extra-additional-dependencies",
+                "bar",
+            ],
         ),
         (
             "pre-commit-config-existing-additional_dependencies.yaml",
-            dict(groups="dev,main"),
+            ["--groups", "dev,main"],
         ),
-        ("pre-commit-config-only-dev-group.yaml", dict(groups="dev")),
+        ("pre-commit-config-only-dev-group.yaml", ["--groups", "dev"]),
     ],
 )
 def test_sync(tmp_path, source_file, additional_args):
@@ -32,10 +37,14 @@ def test_sync(tmp_path, source_file, additional_args):
     pre_commit_config_yaml_path = tmp_path / source_file
     shutil.copy(source_file_path, pre_commit_config_yaml_path)
 
-    _sync(
-        pyproject_path=project_root / "pyproject.toml",
-        pre_commit_config_yaml_path=pre_commit_config_yaml_path,
-        **additional_args,
+    main(
+        [
+            "--pyproject-path",
+            str(project_root / "pyproject.toml"),
+            "--pre-commit-config-yaml-path",
+            str(pre_commit_config_yaml_path),
+        ]
+        + additional_args
     )
 
     formatted_pre_commit_config_yaml = readlines(pre_commit_config_yaml_path)
@@ -53,9 +62,13 @@ def test_sync_no_mypy(tmp_path):
 
     pre_sync_contents = readlines(pre_commit_config_yaml_path)
 
-    _sync(
-        pyproject_path=project_root / "pyproject.toml",
-        pre_commit_config_yaml_path=pre_commit_config_yaml_path,
+    main(
+        [
+            "--pyproject-path",
+            str(project_root / "pyproject.toml"),
+            "--pre-commit-config-yaml-path",
+            str(pre_commit_config_yaml_path),
+        ]
     )
 
     post_sync_contents = readlines(pre_commit_config_yaml_path)

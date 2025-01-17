@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.1]
+
+### Fixed
+
+- fix argument `--extra-additional-dependencies` adding `- ` before each entry in `additional_dependencies`
+
 ## [v0.2.0]
 
 ### Added
 
-- argument `--extra_additional_dependencies <dependencies>` to add verbatim before the poetry dependencies
+- argument `--extra-additional-dependencies <dependencies>` to add verbatim before the poetry dependencies
 
 ## [v0.1.0]
 

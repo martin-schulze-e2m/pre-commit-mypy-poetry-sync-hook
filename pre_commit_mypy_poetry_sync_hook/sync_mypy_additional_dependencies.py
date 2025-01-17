@@ -5,14 +5,14 @@ from poetry.core.factory import Factory
 import argparse
 
 
-def main():
+def main(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "filenames", nargs="*", help="Files pre-commit wants to check (we ignore this!)"
     )
     parser.add_argument(
-        "--extra_additional_dependencies",
-        nargs="*",
+        "--extra-additional-dependencies",
+        action="append",
         help="These will be prepended to mypy hook's additional_dependencies before the poetry dependencies",
     )
     parser.add_argument(
@@ -31,7 +31,7 @@ def main():
     parser.add_argument("--yaml-sequence-indent", type=int, default=2)
     parser.add_argument("--yaml-sequence-dash-offset", type=int, default=0)
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     _sync(**vars(args))
 
