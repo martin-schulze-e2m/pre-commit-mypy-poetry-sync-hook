@@ -16,7 +16,10 @@ def readlines(path: Path) -> list[str]:
 @pytest.mark.parametrize(
     "source_file,additional_args",
     [
-        ("pre-commit-config-no-additional_dependencies.yaml", {}),
+        (
+            "pre-commit-config-no-additional_dependencies.yaml",
+            {"extra_additional_dependencies": ["foo", "bar"]},
+        ),
         (
             "pre-commit-config-existing-additional_dependencies.yaml",
             dict(groups="dev,main"),

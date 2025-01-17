@@ -11,6 +11,11 @@ def main():
         "filenames", nargs="*", help="Files pre-commit wants to check (we ignore this!)"
     )
     parser.add_argument(
+        "--extra_additional_dependencies",
+        nargs="*",
+        help="These will be prepended to mypy hook's additional_dependencies before the poetry dependencies",
+    )
+    parser.add_argument(
         "--pre-commit-config-yaml-path",
         type=Path,
         help="Path to .pre-commit-config.yaml",
@@ -36,6 +41,7 @@ def _sync(
     pre_commit_config_yaml_path: Path | None = None,
     pyproject_path: Path | None = None,
     groups: str | None = None,
+    extra_additional_dependencies: list[str] | None = None,
     yaml_map_indent: int = 2,
     yaml_sequence_indent: int = 2,
     yaml_sequence_dash_offset: int = 0,
@@ -44,6 +50,8 @@ def _sync(
         pre_commit_config_yaml_path = Path.cwd() / ".pre-commit-config.yaml"
     if pyproject_path is None:
         pyproject_path = Path.cwd() / "pyproject.toml"
+    if extra_additional_dependencies is None:
+        extra_additional_dependencies = []
 
     yaml_config = ruamel.yaml.YAML()
     yaml_config.preserve_quotes = True
@@ -71,7 +79,7 @@ def _sync(
     for repo in pre_commit_config["repos"]:
         for hook in repo["hooks"]:
             if hook["id"] == "mypy":
-                hook["additional_dependencies"] = [
+                hook["additional_dependencies"] = extra_additional_dependencies + [
                     dependency.to_pep_508() for dependency in dependencies
                 ]
                 update = True

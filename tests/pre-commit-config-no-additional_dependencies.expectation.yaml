@@ -4,6 +4,8 @@ repos:
   - id: mypy
     stages: [pre-commit]
     additional_dependencies:
+    - foo
+    - bar
     - pre-commit (>=4.0.1,<5.0.0)
     - pytest (>=8.3.4,<9.0.0)
     - ruamel-yaml (>=0.18.10,<0.19.0)

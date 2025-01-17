@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pre-commit-mypy-poetry-sync-hook"
-version = "0.1.0"
+version = "0.2.0"
 description = "A pre-commit hook to keep mypy pre-commit hook's additional_dependencies in sync with poetry"
 authors = ["Martin Schulze <martin.schulze@e2m.de>"]
 license = "MIT"

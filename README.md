@@ -9,7 +9,7 @@ Add the hook to your `.pre-commit-config.yaml`:
 - hooks:
   - id: sync-mypy-additional-dependencies
   repo: https://github.com/martin-schulze-e2m/pre-commit-mypy-poetry-sync-hook
-  rev: v0.1.0
+  rev: v0.2.0
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ These can be added as args to the hook:
   - id: sync-mypy-additional-dependencies
     args: --groups lint # only use dependencies from the lint group
   repo: https://github.com/martin-schulze-e2m/pre-commit-mypy-poetry-sync-hook
-  rev: v0.1.0
+  rev: v0.2.0
 ```
 
 All parameters are optional and have mostly sane defaults.
@@ -33,6 +33,21 @@ The most important are as follows
 List of poetry groups to sync dependencies for
 
 **default**: all non-optional groups
+
+### `--extra_additional_dependencies <str>`
+
+Strings that should be added as entries to mypy hook's `additional_dependencies` before the dependencies from poetry.
+Can be repeated to add multiple entries.
+
+This can be used to change the index used by pip: (See https://github.com/pre-commit/pre-commit/issues/1316#issuecomment-583011187)
+
+```yaml
+- hooks:
+  - id: sync-mypy-additional-dependencies
+    args: --extra_additional_dependencies "--index-url=<your private index>"
+  repo: https://github.com/martin-schulze-e2m/pre-commit-mypy-poetry-sync-hook
+  rev: v0.2.0
+```
 
 ### `--pre-commit-config-yaml-path <path to .pre-commit-config.yaml>`
 
