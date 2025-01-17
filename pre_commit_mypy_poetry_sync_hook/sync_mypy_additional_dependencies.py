@@ -34,12 +34,15 @@ def _sync(pre_commit_config_yaml_path: Path, pyproject_path: Path | None = None,
 
     dependencies = (dependency for group in groups for dependency in poetry_package.dependency_group(group).dependencies)
 
+    update = False
     for repo in pre_commit_config["repos"]:
         for hook in repo["hooks"]:
             if hook["id"] == "mypy":
                 hook["additional_dependencies"] = [dependency.to_pep_508() for dependency in dependencies]
+                update = True
 
-    yaml_config.dump(pre_commit_config, pre_commit_config_yaml_path)
+    if update:
+        yaml_config.dump(pre_commit_config, pre_commit_config_yaml_path)
 
 if __name__ == '__main__':
     main()
