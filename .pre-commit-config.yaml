@@ -52,4 +52,4 @@ repos:
 - hooks:
   - id: sync-mypy-additional-dependencies
   repo: .
-  rev: b60092e480e538ad14d44b4d6035dd049026838b
+  rev: v0.1.0
