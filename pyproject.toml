@@ -13,7 +13,7 @@ sync-mypy-additional-dependencies = "pre_commit_mypy_poetry_sync_hook.sync_mypy_
 [tool.poetry.dependencies]
 python = "^3.10"
 ruamel-yaml = "^0.18.10"
-poetry-core = "^2.0.0"
+poetry = "^2.1.2"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import ruamel.yaml
-from poetry.core.factory import Factory
+from poetry.factory import Factory
 import argparse
 
 
@@ -75,12 +75,18 @@ def _sync(
         for dependency in poetry_package.dependency_group(group).dependencies
     )
 
+    package_version_map = {
+        package["name"]: package["version"]
+        for package in poetry.locker.lock_data["package"]
+    }
+
     update = False
     for repo in pre_commit_config["repos"]:
         for hook in repo["hooks"]:
             if hook["id"] == "mypy":
                 hook["additional_dependencies"] = extra_additional_dependencies + [
-                    dependency.to_pep_508() for dependency in dependencies
+                    f"{dependency.name}=={package_version_map[dependency.name]}"
+                    for dependency in dependencies
                 ]
                 update = True
 
