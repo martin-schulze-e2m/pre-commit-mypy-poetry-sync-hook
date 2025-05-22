@@ -1,6 +1,8 @@
+import collections
 from pathlib import Path
 
 import ruamel.yaml
+from packaging.utils import canonicalize_name
 from poetry.factory import Factory
 import argparse
 
@@ -75,18 +77,36 @@ def _sync(
         for dependency in poetry_package.dependency_group(group).dependencies
     )
 
-    package_version_map = {
-        package["name"]: package["version"]
+    package_map = {
+        canonicalize_name(package["name"]): package
         for package in poetry.locker.lock_data["package"]
     }
 
+    # find the set of all (transitive) dependencies
+    additional_dependencies_set = set()
+    dependencies_to_check = collections.deque([dep.name for dep in dependencies])
+    while len(dependencies_to_check) > 0:
+        dependency = dependencies_to_check.popleft()
+        if dependency not in additional_dependencies_set:
+            additional_dependencies_set.add(dependency)
+            if dependency in package_map:
+                for transitive_dependency in package_map[dependency].get(
+                    "dependencies", []
+                ):
+                    dependencies_to_check.append(
+                        canonicalize_name(transitive_dependency)
+                    )
+
+    additional_dependencies_list = list(sorted(additional_dependencies_set))
+
+    # add the found dependencies to mypy
     update = False
     for repo in pre_commit_config["repos"]:
         for hook in repo["hooks"]:
             if hook["id"] == "mypy":
                 hook["additional_dependencies"] = extra_additional_dependencies + [
-                    f"{dependency.name}=={package_version_map[dependency.name]}"
-                    for dependency in dependencies
+                    f"{dependency}=={package_map[dependency]['version']}"
+                    for dependency in additional_dependencies_list
                 ]
                 update = True
 
