@@ -30,6 +30,10 @@ def readlines(path: Path) -> list[str]:
             ["--groups", "dev,main"],
         ),
         ("pre-commit-config-only-dev-group.yaml", ["--groups", "dev"]),
+        (
+            "pre-commit-config-exclude-dependencies.yaml",
+            ["--exclude-dependencies", "pytest", "--groups", "dev"],
+        ),
     ],
 )
 def test_sync(tmp_path, source_file, additional_args):

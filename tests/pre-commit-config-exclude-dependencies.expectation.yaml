@@ -1,0 +1,19 @@
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+repos:
+- hooks:
+  - id: mypy # these comments are preserved!
+    stages: [pre-commit]
+    additional_dependencies:
+    - cfgv==3.4.0
+    - distlib==0.3.9
+    - filelock==3.16.1
+    - identify==2.6.5
+    - nodeenv==1.9.1
+    - platformdirs==4.3.6
+    - pre-commit==4.0.1
+    - pyyaml==6.0.2
+    - virtualenv==20.29.0
+    # additional_dependencies should not contain pytest and its dependencies,
+    # unless they are a dependency of some other library
+  repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.10.0

@@ -33,6 +33,12 @@ def main(args=None):
     parser.add_argument("--yaml-sequence-indent", type=int, default=2)
     parser.add_argument("--yaml-sequence-dash-offset", type=int, default=0)
 
+    parser.add_argument(
+        "--exclude-dependencies",
+        action="append",
+        help="Dependencies that should never be added to the list of additional_dependencies",
+    )
+
     args = parser.parse_args(args)
 
     _sync(**vars(args))
@@ -47,6 +53,7 @@ def _sync(
     yaml_map_indent: int = 2,
     yaml_sequence_indent: int = 2,
     yaml_sequence_dash_offset: int = 0,
+    exclude_dependencies: list[str] | None = None,
 ):
     if pre_commit_config_yaml_path is None:
         pre_commit_config_yaml_path = Path.cwd() / ".pre-commit-config.yaml"
@@ -54,6 +61,8 @@ def _sync(
         pyproject_path = Path.cwd() / "pyproject.toml"
     if extra_additional_dependencies is None:
         extra_additional_dependencies = []
+    if exclude_dependencies is None:
+        exclude_dependencies = []
 
     yaml_config = ruamel.yaml.YAML()
     yaml_config.preserve_quotes = True
@@ -87,7 +96,10 @@ def _sync(
     dependencies_to_check = collections.deque([dep.name for dep in dependencies])
     while len(dependencies_to_check) > 0:
         dependency = dependencies_to_check.popleft()
-        if dependency not in additional_dependencies_set:
+        if (
+            dependency not in additional_dependencies_set
+            and dependency not in exclude_dependencies
+        ):
             additional_dependencies_set.add(dependency)
             if dependency in package_map:
                 for transitive_dependency in package_map[dependency].get(
